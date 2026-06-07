@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DevisPro — Devis en 30 secondes</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --orange: #FF5C00;
+      --dark: #0D0D0D;
+      --light: #F5F2ED;
+      --mid: #1A1A1A;
+      --muted: #888;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--dark);
+      color: var(--light);
+      font-family: 'DM Sans', sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* NAV */
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.5rem 5vw;
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      background: rgba(13,13,13,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .logo {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 1.4rem;
+      color: var(--light);
+      letter-spacing: -0.02em;
+    }
+
+    .logo span { color: var(--orange); }
+
+    nav a {
+      background: var(--orange);
+      color: white;
+      text-decoration: none;
+      padding: 0.6rem 1.4rem;
+      border-radius: 100px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: opacity 0.2s;
+    }
+
+    nav a:hover { opacity: 0.85; }
+
+    /* HERO */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 8rem 5vw 4rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -200px; right: -200px;
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(255,92,0,0.15) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(255,92,0,0.12);
+      border: 1px solid rgba(255,92,0,0.3);
+      color: var(--orange);
+      padding: 0.4rem 1rem;
+      border-radius: 100px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      margin-bottom: 2rem;
+      width: fit-content;
+      animation: fadeUp 0.6s ease both;
+    }
+
+    .badge::before {
+      content: '';
+      width: 6px; height: 6px;
+      background: var(--orange);
+      border-radius: 50%;
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    h1 {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: clamp(3rem, 7vw, 6rem);
+      line-height: 1.0;
+      letter-spacing: -0.03em;
+      margin-bottom: 1.5rem;
+      animation: fadeUp 0.6s 0.1s ease both;
+    }
+
+    h1 em {
+      font-style: normal;
+      color: var(--orange);
+    }
+
+    .subtitle {
+      font-size: clamp(1rem, 2vw, 1.2rem);
+      color: var(--muted);
+      max-width: 520px;
+      line-height: 1.7;
+      margin-bottom: 2.5rem;
+      animation: fadeUp 0.6s 0.2s ease both;
+    }
+
+    .cta-group {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      align-items: center;
+      animation: fadeUp 0.6s 0.3s ease both;
+    }
+
+    .btn-primary {
+      background: var(--orange);
+      color: white;
+      border: none;
+      padding: 1rem 2rem;
+      border-radius: 100px;
+      font-size: 1rem;
+      font-weight: 500;
+      cursor: pointer;
+      text-decoration: none;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 0 40px rgba(255,92,0,0.3);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 60px rgba(255,92,0,0.5);
+    }
+
+    .btn-secondary {
+      color: var(--muted);
+      font-size: 0.9rem;
+      text-decoration: none;
+    }
+
+    .social-proof {
+      margin-top: 4rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      animation: fadeUp 0.6s 0.4s ease both;
+    }
+
+    .avatars {
+      display: flex;
+    }
+
+    .avatar {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      border: 2px solid var(--dark);
+      margin-left: -8px;
+      font-size: 1.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--mid);
+    }
+
+    .avatar:first-child { margin-left: 0; }
+
+    .social-proof p {
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    .social-proof strong { color: var(--light); }
+
+    /* HOW IT WORKS */
+    .section {
+      padding: 6rem 5vw;
+    }
+
+    .section-label {
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--orange);
+      margin-bottom: 1rem;
+    }
+
+    .section h2 {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: clamp(2rem, 4vw, 3rem);
+      letter-spacing: -0.02em;
+      margin-bottom: 3rem;
+    }
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .step {
+      background: var(--mid);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 20px;
+      padding: 2rem;
+      transition: border-color 0.3s;
+    }
+
+    .step:hover { border-color: rgba(255,92,0,0.3); }
+
+    .step-num {
+      font-family: 'Syne', sans-serif;
+      font-size: 3rem;
+      font-weight: 800;
+      color: rgba(255,92,0,0.2);
+      line-height: 1;
+      margin-bottom: 1rem;
+    }
+
+    .step h3 {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.1rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .step p {
+      color: var(--muted);
+      font-size: 0.9rem;
+      line-height: 1.6;
+    }
+
+    /* BENEFITS */
+    .benefits {
+      background: var(--mid);
+      border-radius: 24px;
+      padding: 4rem;
+      margin: 0 5vw;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      align-items: center;
+    }
+
+    .benefits h2 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(1.8rem, 3vw, 2.5rem);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 1.5rem;
+    }
+
+    .benefit-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .benefit-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      font-size: 0.95rem;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .benefit-list li::before {
+      content: '✓';
+      color: var(--orange);
+      font-weight: 700;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .stat-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+    }
+
+    .stat-card {
+      background: var(--dark);
+      border-radius: 16px;
+      padding: 1.5rem;
+      text-align: center;
+    }
+
+    .stat-card .num {
+      font-family: 'Syne', sans-serif;
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--orange);
+      line-height: 1;
+      margin-bottom: 0.25rem;
+    }
+
+    .stat-card p {
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    /* PRICING */
+    .pricing-card {
+      max-width: 420px;
+      margin: 0 auto;
+      background: var(--mid);
+      border: 1px solid rgba(255,92,0,0.3);
+      border-radius: 24px;
+      padding: 2.5rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .pricing-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: var(--orange);
+    }
+
+    .price {
+      font-family: 'Syne', sans-serif;
+      font-size: 3.5rem;
+      font-weight: 800;
+      color: var(--light);
+      margin: 1rem 0 0.25rem;
+    }
+
+    .price span {
+      font-size: 1.2rem;
+      color: var(--muted);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 400;
+    }
+
+    .price-desc {
+      color: var(--muted);
+      font-size: 0.9rem;
+      margin-bottom: 2rem;
+    }
+
+    .price-features {
+      list-style: none;
+      text-align: left;
+      margin-bottom: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .price-features li {
+      font-size: 0.9rem;
+      color: var(--muted);
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .price-features li::before {
+      content: '✓';
+      color: var(--orange);
+      font-weight: 700;
+    }
+
+    /* FORM SECTION */
+    .form-section {
+      padding: 6rem 5vw;
+      text-align: center;
+    }
+
+    .form-section h2 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.75rem;
+    }
+
+    .form-section p {
+      color: var(--muted);
+      margin-bottom: 2rem;
+    }
+
+    .form-wrap {
+      display: flex;
+      gap: 0.75rem;
+      max-width: 480px;
+      margin: 0 auto;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .form-wrap input {
+      flex: 1;
+      min-width: 200px;
+      background: var(--mid);
+      border: 1px solid rgba(255,255,255,0.1);
+      color: var(--light);
+      padding: 0.9rem 1.25rem;
+      border-radius: 100px;
+      font-size: 0.95rem;
+      font-family: 'DM Sans', sans-serif;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .form-wrap input:focus { border-color: var(--orange); }
+    .form-wrap input::placeholder { color: var(--muted); }
+
+    .form-wrap button {
+      background: var(--orange);
+      color: white;
+      border: none;
+      padding: 0.9rem 1.75rem;
+      border-radius: 100px;
+      font-size: 0.95rem;
+      font-weight: 500;
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      transition: opacity 0.2s;
+    }
+
+    .form-wrap button:hover { opacity: 0.85; }
+
+    .success-msg {
+      display: none;
+      color: var(--orange);
+      font-weight: 500;
+      margin-top: 1rem;
+    }
+
+    /* FOOTER */
+    footer {
+      text-align: center;
+      padding: 2rem 5vw;
+      border-top: 1px solid rgba(255,255,255,0.05);
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 768px) {
+      .benefits {
+        grid-template-columns: 1fr;
+        padding: 2rem;
+        margin: 0 1rem;
+      }
+      .stat-grid { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="logo">Devis<span>Pro</span></div>
+    <a href="#essai">Tester gratuitement</a>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="badge">🔧 Pour plombiers & électriciens</div>
+    <h1>Votre devis en<br><em>30 secondes.</em><br>Pas une minute de plus.</h1>
+    <p class="subtitle">Décrivez le travail, DevisPro génère un devis professionnel en PDF prêt à envoyer à votre client. Fini les soirées à remplir des tableaux.</p>
+    <div class="cta-group">
+      <a href="#essai" class="btn-primary">Je veux tester gratuitement →</a>
+      <a href="#comment" class="btn-secondary">Comment ça marche ?</a>
+    </div>
+    <div class="social-proof">
+      <div class="avatars">
+        <div class="avatar">👷</div>
+        <div class="avatar">🔧</div>
+        <div class="avatar">⚡</div>
+      </div>
+      <p><strong>100% gratuit</strong> pendant 14 jours — sans carte bancaire</p>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="section" id="comment">
+    <p class="section-label">Comment ça marche</p>
+    <h2>3 étapes, c'est tout.</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">01</div>
+        <h3>Décrivez le travail</h3>
+        <p>Entrez la description de la panne, les matériaux utilisés et le temps estimé. En quelques mots.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">02</div>
+        <h3>L'IA génère votre devis</h3>
+        <p>Notre outil crée automatiquement un devis professionnel avec vos informations, les prix et la TVA.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">03</div>
+        <h3>Envoyez à votre client</h3>
+        <p>Téléchargez le PDF et envoyez-le directement. Votre client reçoit un document impeccable.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- BENEFITS -->
+  <div class="benefits">
+    <div>
+      <p class="section-label">Pourquoi DevisPro</p>
+      <h2>Arrêtez de perdre du temps sur l'administratif.</h2>
+      <ul class="benefit-list">
+        <li>Devis généré en moins de 30 secondes chrono</li>
+        <li>PDF professionnel avec votre logo et coordonnées</li>
+        <li>Calcul automatique de la TVA et des marges</li>
+        <li>Historique de tous vos devis en un seul endroit</li>
+        <li>Fonctionne sur téléphone, tablette et ordinateur</li>
+      </ul>
+    </div>
+    <div class="stat-grid">
+      <div class="stat-card">
+        <div class="num">30s</div>
+        <p>pour générer un devis complet</p>
+      </div>
+      <div class="stat-card">
+        <div class="num">2h</div>
+        <p>économisées par semaine en moyenne</p>
+      </div>
+      <div class="stat-card">
+        <div class="num">100%</div>
+        <p>professionnel et personnalisé</p>
+      </div>
+      <div class="stat-card">
+        <div class="num">14j</div>
+        <p>d'essai gratuit sans engagement</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- PRICING -->
+  <section class="section">
+    <p class="section-label" style="text-align:center">Tarif</p>
+    <h2 style="text-align:center; font-family:'Syne',sans-serif; font-weight:800; font-size:clamp(2rem,4vw,3rem); letter-spacing:-0.02em; margin-bottom:2rem;">Simple et sans surprise.</h2>
+    <div class="pricing-card">
+      <p style="color:var(--muted); font-size:0.85rem; text-transform:uppercase; letter-spacing:0.1em;">Offre unique</p>
+      <div class="price">29€ <span>/ mois</span></div>
+      <p class="price-desc">14 jours gratuits — aucune carte requise</p>
+      <ul class="price-features">
+        <li>Devis illimités</li>
+        <li>Export PDF professionnel</li>
+        <li>Logo et coordonnées personnalisés</li>
+        <li>Calcul TVA automatique</li>
+        <li>Historique complet</li>
+        <li>Support par email</li>
+      </ul>
+      <a href="#essai" class="btn-primary" style="display:block; text-align:center;">Commencer gratuitement →</a>
+    </div>
+  </section>
+
+  <!-- FORM -->
+  <section class="form-section" id="essai">
+    <h2>Prêt à gagner du temps ?</h2>
+    <p>Laissez votre email, on vous contacte dans les 24h.</p>
+    <div class="form-wrap">
+      <input type="email" id="emailInput" placeholder="votre@email.com" />
+      <button onclick="handleSubmit()">Je veux tester →</button>
+    </div>
+    <p class="success-msg" id="successMsg">✅ Merci ! On vous contacte très bientôt.</p>
+  </section>
+
+  <footer>
+    <p>© 2026 DevisPro — Fait avec ❤️ pour les artisans français</p>
+  </footer>
+
+  <script>
+    function handleSubmit() {
+      const email = document.getElementById('emailInput').value;
+      if (!email || !email.includes('@')) {
+        alert('Veuillez entrer un email valide.');
+        return;
+      }
+      document.getElementById('successMsg').style.display = 'block';
+      document.getElementById('emailInput').value = '';
+      // Ici on pourra connecter un vrai backend plus tard
+      console.log('Email collecté:', email);
+    }
+
+    document.getElementById('emailInput').addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') handleSubmit();
+    });
+  </script>
+
+</body>
+</html>
